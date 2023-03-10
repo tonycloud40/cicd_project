@@ -1,25 +1,44 @@
 #Makefile
-format-black:
-	poetry run black .
+.DEFAULT_GOAL := help
+.PHONY: help
+help:  ## Display this help
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-format-isort:
-	poetry run isort .
 
-lint-black:
-	poetry run black . --check
+##@ Formatters
 
-lint-isort:
-	poetry run isort . --check
+.PHONY: format-black
+format-black: ## black (code formatter)
+	@poetry run black .
 
-lint-flake8:
-	poetry run flake8
+.PHONY: format-isort
+format-isort: ## isort (import formatter)
+	@poetry run isort .
 
-lint-mypy:
-	poetry run mypy ./src
+##@ Linters
 
-lint-mypy-report:
-	poetry run mypy ./src --html-report ./mypy_html
+.PHONY: lint-black
+lint-black: ## black in linting mode
+	@poetry run black . --check
 
-format: format-black format-isort
+.PHONY: lint-isort
+lint-isort: ## isort in linting mode
+	@poetry run isort . --check
 
-lint: lint-black lint-isort lint-flake8 lint-mypy
+.PHONY: lint-flake8
+lint-flake8: ## flake8 (linter)
+	@poetry run flake8
+
+.PHONY: lint-mypy
+lint-mypy: ## mypy (static-type checker)
+	@poetry run mypy ./src
+
+.PHONY: lint-mypy-report
+lint-mypy-report: ## run mypy & create report
+	@poetry run mypy ./src --html-report ./mypy_html
+
+.PHONY: format
+format: format-black format-isort  ## run all formatters
+
+.PHONY: lint
+lint: lint-black lint-isort lint-flake8 lint-mypy ## run all linters
