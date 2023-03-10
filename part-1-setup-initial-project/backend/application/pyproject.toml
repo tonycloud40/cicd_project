@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "src"
+version = "0.1.1"
+description = "CICD project Tutorial"
+authors = ["Tony Cloud <tonyecloud40@gmail.com>"]
+readme = "README.md"
+
+homepage = "https://github.com/tonycloud40/cicd_project"
+repository = "https://github.com/tonycloud40/cicd_project"
+license = "MIT"
+
+packages = [{include ="src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.93.0"
+uvicorn = "^0.21.0"
+
+[tool.poetry.scripts]
+start= "src.main:start"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
